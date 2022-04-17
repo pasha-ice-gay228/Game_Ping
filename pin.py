@@ -17,20 +17,25 @@ class Player1(GameSprite):
         keys = key.get_pressed()
         if keys[K_UP] and self.rect.y > 5:
             self.rect.y -= self.speed
-        if keys[K_DOWN] and self.rect.y < 500 - 80:
-            self.rect.y -= self.speed
+        if keys[K_DOWN] and self.rect.y < 450 :
+            self.rect.y += self.speed
 class Player2(GameSprite):
     def update(self):
         keys = key.get_pressed()
-        if keys[K_W] and self.rect.y > 5:
+        if keys[K_w] and self.rect.y > 5:
             self.rect.y -= self.speed
-        if keys[K_S] and self.rect.y < 500 - 80:
-            self.rect.y -= self.speed
+        if keys[K_s] and self.rect.y < 450:
+            self.rect.y += self.speed
+    def colliderect(self, rect):
+        return self.rect.colliderect(rect)
     
-
+clock = time.Clock()
+FPS = 60
 game = True
 finish = False
-player1 = Player1('Rocket')
+player1 = Player1('Rocket.png', 25, 250, 5)
+player2 = Player2('Rocket.png', 625, 250, 5)
+hach = GameSprite('хачЬ.png', 325, 250, 10)
 
 
 window = display.set_mode((700,500))
@@ -38,9 +43,25 @@ display.set_caption('Пинг-Понг')
 background = transform.scale(image.load('травка.jpg'),(700,500))
 
 
-
+speed_x = 4
+speed_y = 4
 
 while game:
-
+    for e in event.get():
+        if e.type == QUIT:
+            game = False
     window.blit(background,(0, 0))
+    player1.reset()
+    player1.update()
+    player2.update()
+    player2.reset()
+    
+    hach.rect.x += speed_x
+    hach.rect.y += speed_y
+    if hach.rect.y > 450:
+        speed_y *= -1
+    hach.reset()
+    hach.update()
+   
     display.update()
+    clock.tick(FPS)
